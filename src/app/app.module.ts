@@ -18,6 +18,8 @@ import {
 } from 'angularfire2/firestore';
  */import { HttpClientModule } from '@angular/common/http';
 import { FirestoreService } from './firestore.service';
+import { ProjectMasterComponent } from './project-master/project-master.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 let firebaseConfig={    
   apiKey: "AIzaSyAxsJriq2K_uBeerZMFXEP3g-284vUTmbU",
   authDomain: "jira-89e86.firebaseapp.com",
@@ -32,6 +34,8 @@ let firebaseConfig={
   declarations: [
     AppComponent,
     DashboardComponent,
+    ProjectMasterComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
