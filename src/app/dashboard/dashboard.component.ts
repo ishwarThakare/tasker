@@ -206,16 +206,17 @@ for( var x = 0; x < cw; x++ ){
   document.body.style.background = 'url(' + c.toDataURL() + ')';
 
   }
-  addCard(){
+/*   addCard(){
     this.cardData[this.num]={};       
     this.num++;
   }
 
   addCard2(){
     this.todo.unshift("Test")
-  }
+  } */
+  
   addCard3(){
-    this.projectData.lifeCycleDataArr[0].data.push({taskName:''})
+    this.projectData.lifeCycleDataArr[0].data.unshift({taskName:''})
     this.firestoreService.updateActivity('ishwar',this.projectData)
   }
 

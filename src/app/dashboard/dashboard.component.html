@@ -27,7 +27,7 @@
         <div align="center"
           cdkDropList
           [cdkDropListData]="projectData?.lifeCycleDataArr[i]?.data"
-          class=""
+          class="full-height"
           (cdkDropListDropped)="drop($event)">
          <!--  [class]="j%2==0?'example-box left-transaform':'example-box right-transform'" -->
           <div *ngFor="let tasks of projectData?.lifeCycleDataArr[i]?.data;let j=index" class="example-box "  cdkDrag >
