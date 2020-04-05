@@ -1,87 +1,63 @@
-<div class="container1">
-    <div class="row p35">
+<!-- <div class="back">
+  <a routerLink="/login" routerLinkActive="active" class="btn-go-home">GO To Login</a>
+  <div class="row">
     <div class="col">
-        <button class="btn draw-border" (click)="goToDashboard()">Start</button>
+  
+      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  
+        <label>
+        Project Name:
+          <input type="text" formControlName="projectName">
+        </label>
       
-    </div>  
+        <label>
+         project Steps:
+          <input type="text" formControlName="ProjectStep">
+        </label>
+        <button type="submit" [disabled]="!projectForm.valid">Submit</button>
+      </form>
     </div>
-      <div class="row">
-        <div class="col">
+    <div class="col ">
+  <div class="row">
+  <button type="button" (click)="goToDashboard(project)" class="btn btn-outline-info" *ngFor="let project of allProjects; let i=index">  {{project.projectName}}</button>
+  </div>
+  
+    </div>
+    </div>
+</div>
+ -->
+
+<div class="body">
+  <div class="container" id="container">
+    <div class="form-container sign-up-container">
+      <form [formGroup]="projectForm" >
+
+          <input type="text" placeholder="Project Name" formControlName="projectName"/>
       
+          <input type="text" placeholder="Add max 7 steps"  #stepInput (keyup.enter)="addStep(stepInput.value)" formControlName="projectStep"/>
+          <div>
+              <p class="float-left" *ngFor="let step of stepList;let i=index"> {{step}}<i class="cursor-pointer fa fa-close" (click)="removeStep(i)" ></i>&nbsp;&nbsp;</p>
+          </div>
+        <button class="submit-button" type="button" (click)="onSubmit()" [disabled]="!projectForm.valid || (stepList.length==0)"><i class="fa fa-check"></i></button>
+      </form>
+     
+    </div>
+    <!-- <div class="form-container sign-in-container">
+       
+    </div> -->
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-right">
+                <h1>Your Projects!</h1>
+                <br>
+                <button type="button" class="btn btn-outline-info"  (click)="goToDashboard(project)" class="btn btn-outline-info" *ngFor="let project of allProjects; let i=index">  {{project.projectName}}</button>
+
+<!--                     <h1>Hello, Friend!</h1>
+                <p>Enter your personal details and start journey with us</p>
+                <button class="ghost" id="signUp">Sign Up</button> -->
+            </div>
         </div>
-        <div class="col">
-            <div class="husky">
-                <div class="mane">
-                  <div class="coat"></div>
-                </div>
-                <div class="body">
-                  <div class="head">
-                    <div class="ear"></div>
-                    <div class="ear"></div>
-                    <div class="face">
-                      <div class="eye"></div>
-                      <div class="eye"></div>
-                      <div class="nose"></div>
-                      <div class="mouth">
-                        <div class="lips"></div>
-                        <div class="tongue"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="torso"></div>
-                </div>
-                <div class="legs">
-                  <div class="front-legs">
-                    <div class="leg"></div>
-                    <div class="leg"></div>
-                  </div>
-                  <div class="hind-leg">
-                  </div>
-                </div>
-                <div class="tail">
-                  <div class="tail">
-                    <div class="tail">
-                      <div class="tail">
-                        <div class="tail">
-                          <div class="tail">
-                            <div class="tail"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display:none">
-                <defs>
-              
-                  
-                  <filter id="squiggly-0">
-                    <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="0"/>
-                    <feDisplacementMap id="displacement" in="SourceGraphic" in2="noise" scale="2" />
-                  </filter>
-                  <filter id="squiggly-1">
-                    <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="1"/>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" />
-                  </filter>
-                  
-                  <filter id="squiggly-2">
-                    <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="2"/>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
-                  </filter>
-                  <filter id="squiggly-3">
-                    <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="3"/>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" />
-                  </filter>
-                  
-                  <filter id="squiggly-4">
-                    <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="4"/>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" />
-                  </filter>
-                </defs> 
-              </svg>
-        </div>
-        <div class="col"></div>
-      </div>
+    </div>
+</div>
+
 </div>

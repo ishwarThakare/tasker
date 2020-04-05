@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
+import { Router, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationEnd, NavigationExtras } from '@angular/router';
+
 export interface Item { name: string; }
 @Component({
   selector: 'app-root',
@@ -10,11 +12,22 @@ export interface Item { name: string; }
 })
 export class AppComponent {
   public taskData;
+    /** Represents if event triggered before lazy loading a route config or when a route has been lazy loaded.*/
+    public loadingRouteConfig: boolean;
+
   constructor(public db: AngularFirestore,private afs: AngularFirestore,
+    private router: Router,
+
     ) {
       this.taskData=[]
   }
   ngOnInit(){
+    this.router.events.subscribe(event => {
+      if (event instanceof RouteConfigLoadStart) {
+        this.loadingRouteConfig = true;
+      } else if (event instanceof RouteConfigLoadEnd) {
+        this.loadingRouteConfig = false;
+      }})
 /*     this.db.collection("users").add({
       first: "Ada",
       last: "Lovelace",

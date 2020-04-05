@@ -1,3 +1,68 @@
+
+
+<div class="dashboard-bg" id="dashboard-bg">
+    <h3 *ngIf="projectData && projectData?.projectName" class="project-name"><i class="float-left fa fa-chevron-left pointer-cursor" (click)="goToMaster()"></i> {{projectData?.projectName |uppercase }}
+      <select class=" form-control top-select"  [(ngModel)]="projectData.themeName" (change)="changeTheme($event.target.value)">
+          <option value="dt">Dark Texture</option>
+          <option value="mb" selected>Material black</option>
+          <option value="b">Black</option>
+<!--           <option value="pt">Pink Texture</option>
+ -->          <option value="light">Light</option>
+          <option value="img">Image</option>
+        </select>
+    
+    </h3>
+    <div *ngIf="projectData && projectData?.projectName" class="row body-data2" cdkDropListGroup>
+        <div class=" life-cycles2 col" *ngFor="let item of projectData?.lifeCycleNames;let i=index">
+            <h4 class="text-center">{{item}} 
+                <button *ngIf="i==0" (click)="addCard3()" class="btn btn-outline-light float-right btn-sm "><i class="fa fa-plus"></i></button><!-- class="add-card btn btn-light">+</button> -->
+
+              </h4>
+            <div align="center"
+              cdkDropList
+              [cdkDropListData]="projectData?.lifeCycleDataArr[i]?.data"
+              class="full-height"
+              (cdkDropListDropped)="drop($event)">
+             <!--  [class]="j%2==0?'example-box left-transaform':'example-box right-transform'" -->
+              <div *ngFor="let tasks of projectData?.lifeCycleDataArr[i]?.data;let j=index" class="example-box "  cdkDrag >
+                  <i class="fa fa-close close" (click)="removeElement(i,j)"></i>
+                <span cdkDragHandle class="dragger"></span>
+                  <textarea placeholder="Add a task" class="text-note" rows="7" (blur)="setTaskValue($event,i,j)">{{tasks.taskName}}</textarea>
+                  </div>
+                  <div *ngIf="projectData?.lifeCycleDataArr[i]?.data.length==0"  class="example-box hidden-box" cdkDrag >
+                      <span cdkDragHandle class="dragger"></span>
+                      </div>
+            </div>
+          </div>      
+        </div>
+    
+     <div class="loader-data" *ngIf="!projectData || !projectData?.projectName">
+      <div class='body'>
+        <span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <div class='base'>
+          <span></span>
+          <div class='face'></div>
+        </div>
+      </div>
+      <div class='longfazers'>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <h1>Redirecting</h1>
+      
+     </div>
+    
+    
+</div>
+
+
 <!-- <div class="row lines">
   <div *ngFor="let cycle of lifeCycles" class="col life-cycles text-center">{{cycle}}</div>
 </div>
@@ -10,41 +75,7 @@
       </div>
 </div>
 </div> -->
-<h3 *ngIf="projectData && projectData?.projectName" class="project-name">{{projectData?.projectName}}</h3>
-<div *ngIf="projectData && projectData?.projectName" class="row body-data2" cdkDropListGroup>
-    <div class=" life-cycles2 col" *ngFor="let item of projectData?.lifeCycleNames;let i=index">
-        <h4 class="text-center">{{item}} 
-            <button *ngIf="i==0" (click)="addCard3()" class="btn btn-outline-light float-right btn-sm "><i class="fa fa-plus"></i></button><!-- class="add-card btn btn-light">+</button> -->
-          <select class=" form-group select-theme float-right" *ngIf="i==(projectData?.lifeCycleNames?.length-1)" (change)="changeTheme($event.target.value)">
-            <option value="dt">Dark Texture</option>
-            <option value="mb" selected>Material black</option>
-            <option value="b">Black</option>
-            <option value="pt">Pink Texture</option>
-            <option value="light">Light</option>
-            <option value="img">Image</option>
-          </select>
-          </h4>
-        <div align="center"
-          cdkDropList
-          [cdkDropListData]="projectData?.lifeCycleDataArr[i]?.data"
-          class="full-height"
-          (cdkDropListDropped)="drop($event)">
-         <!--  [class]="j%2==0?'example-box left-transaform':'example-box right-transform'" -->
-          <div *ngFor="let tasks of projectData?.lifeCycleDataArr[i]?.data;let j=index" class="example-box "  cdkDrag >
-              <i class="fa fa-close close" (click)="removeElement(i,j)"></i>
-            <span cdkDragHandle class="dragger"></span>
-              <textarea placeholder="Add a task" class="text-note" rows="7" (blur)="setTaskValue($event,i,j)">{{tasks.taskName}}</textarea>
-              </div>
-              <div *ngIf="projectData?.lifeCycleDataArr[i]?.data.length==0"  class="example-box hidden-box" cdkDrag >
-                  <span cdkDragHandle class="dragger"></span>
-                  </div>
-        </div>
-      </div>      
-    </div>
-
-
-    
-<!-- Working <div class="row body-data2" cdkDropListGroup>
+  <!-- Working <div class="row body-data2" cdkDropListGroup>
     <div class=" life-cycles2 col" *ngFor="let item of projectData?.lifeCycleNames;let i=index">
         <h4 class="text-center">{{item}}   <button *ngIf="i==0" (click)="addCard3()" class="add-card btn btn-light">+</button></h4>
         <div align="center"

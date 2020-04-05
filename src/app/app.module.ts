@@ -17,9 +17,11 @@ import {
   AngularFirestoreModule
 } from 'angularfire2/firestore';
  */import { HttpClientModule } from '@angular/common/http';
+ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FirestoreService } from './firestore.service';
 import { ProjectMasterComponent } from './project-master/project-master.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LoginComponent } from './login/login.component';
 let firebaseConfig={    
   apiKey: "AIzaSyAxsJriq2K_uBeerZMFXEP3g-284vUTmbU",
   authDomain: "jira-89e86.firebaseapp.com",
@@ -36,12 +38,15 @@ let firebaseConfig={
     DashboardComponent,
     ProjectMasterComponent,
     PageNotFoundComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NoopAnimationsModule,
     DragDropModule,
+    ReactiveFormsModule,
+    FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { FirestoreService } from '../firestore.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import {
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, ActivatedRoute } from '@angular/router';
+/* import {
   AngularFirestoreDocument,
   AngularFirestoreCollection,
   DocumentChangeAction,
@@ -13,7 +14,7 @@ import {
 import { Observable, from } from 'rxjs';
 import { map, tap, take, switchMap, mergeMap, expand, takeWhile } from 'rxjs/operators';
 
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase/app'; */
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -41,9 +42,17 @@ export class DashboardComponent implements OnInit {
   public cardData:any
   public num;
   public lifeCycles:any;
+  public allUserData:any
   public taskData;
+  projectId
   constructor(private firestoreService: FirestoreService,
-    public db: AngularFirestore,private afs: AngularFirestore,) {
+    public db: AngularFirestore,private afs: AngularFirestore,
+    private router: Router,
+    private activeRoute:ActivatedRoute) {
+      this.activeRoute.params.subscribe(param=>{
+        this.projectId=param.projectId;
+        console.log(param.projectId)
+      })
 /*     this.firestoreService.activities$.subscribe(
       res => {
         console.log("RES: AA:",res)
@@ -74,18 +83,24 @@ export class DashboardComponent implements OnInit {
      
    }); */
    this.db.collection('users').valueChanges().subscribe(data=>{
-     //console.log("value change: ",data[0]);
-     this.projectData=data[0]
-   })
+     this.allUserData=data&& data.length?(data[0]['pro']):[];
+     console.log("users: ",this.allUserData)
+
+     this.fetchCurrentProjectDetail()
+
+    })
    
     this.db.collection('users').get().subscribe
     ((snapshot) => {
       snapshot.forEach((doc) => {
        // console.log(doc.id, '=>', doc.data());
-        if(doc.data())
+       if(doc.data())
 { 
-  // let prevTheme=JSON.parse(JSON.stringify(this.projectData.themeName));
-         this.projectData=doc.data();
+          this.allUserData=doc.data()['pro'];
+          console.log("users2: ",this.allUserData)
+
+          this.fetchCurrentProjectDetail()
+
          this.convertLifeCycleNames();
          this.changeTheme(this.projectData.themeName||'mb')
        
@@ -111,6 +126,37 @@ export class DashboardComponent implements OnInit {
 } */
   }
 
+
+fetchCurrentProjectDetail(){
+
+    if(this.allUserData.length){
+      if(this.projectId){
+
+      this.projectData=this.allUserData.find(ele=>{
+        return ele.projectName.toLowerCase()==this.projectId.toLowerCase()
+          })
+          console.log("CURRRR",this.projectData)
+        }
+        else{
+          this.projectData=this.allUserData[0]
+        }  
+    }else{
+      this.projectData={
+        projectName:'Neuron',
+        lifeCycleNames:['To Do','In Progress','Pending For Review','In Review','Done'],
+        lifeCycleData:{},
+        lifeCycleDataArr:[],
+        themeName:''
+      }
+    
+    
+        }
+}
+
+  goToMaster()
+  {
+    this.router.navigate(['/master'])
+  }
   ngAfterViewInit(){
     console.log("After init")
     if(this.projectData&&this.projectData.projectName)
@@ -127,7 +173,7 @@ export class DashboardComponent implements OnInit {
   }
 removeElement(i,j){
   this.projectData.lifeCycleDataArr[i].data.splice(j, 1);
-  this.firestoreService.updateActivity('ishwar',this.projectData)
+  this.firestoreService.updateActivity('ishwar',{pro:this.allUserData})
 }
   convertLifeCycleNames(){
 /*     this.projectData.lifeCycleNames.forEach(element => {
@@ -162,7 +208,7 @@ removeElement(i,j){
                         event.currentIndex);
     }
    /*  console.log(this.projectData) */
-    this.firestoreService.updateActivity('ishwar',this.projectData)
+    this.firestoreService.updateActivity('ishwar',{pro:this.allUserData})
   }
 
   trackByKey(index: number, cardData: any): string {
@@ -170,6 +216,8 @@ removeElement(i,j){
     return cardData.key;
 }
   fillDark(){
+    let d=document.getElementById('dashboard-bg')
+
     var c = document.createElement('canvas'),        
     ctx = c.getContext('2d'),
     cw = c.width = 200,
@@ -182,7 +230,7 @@ for( var x = 0; x < cw; x++ ){
     }
     //#181818
 }
-  document.body.style.background = 'url(' + c.toDataURL() + ')';
+  d.style.background = 'url(' + c.toDataURL() + ')';
 
   }
 
@@ -191,6 +239,8 @@ for( var x = 0; x < cw; x++ ){
     ctx.fillRect(x, y, 1, 1);
 } */
   fillPink(){
+    let d=document.getElementById('dashboard-bg')
+
     var c = document.createElement('canvas'),        
     ctx = c.getContext('2d'),
     cw = c.width = 200,
@@ -203,7 +253,7 @@ for( var x = 0; x < cw; x++ ){
     }
     //#181818
 }
-  document.body.style.background = 'url(' + c.toDataURL() + ')';
+  d.style.background = 'url(' + c.toDataURL() + ')';
 
   }
 /*   addCard(){
@@ -217,43 +267,44 @@ for( var x = 0; x < cw; x++ ){
   
   addCard3(){
     this.projectData.lifeCycleDataArr[0].data.unshift({taskName:''})
-    this.firestoreService.updateActivity('ishwar',this.projectData)
+    this.firestoreService.updateActivity('ishwar',{pro:this.allUserData})
   }
 
   setTaskValue(event,i,j){
     this.projectData.lifeCycleDataArr[i].data[j].taskName=event.target.value;
-    this.firestoreService.updateActivity('ishwar',this.projectData)
+    this.firestoreService.updateActivity('ishwar',{pro:this.allUserData})
   }
 
 
 
   changeTheme(color){
+    let d=document.getElementById('dashboard-bg')
     this.projectData.themeName=color;
     //console.log(this.projectData.themeName)
-    this.firestoreService.updateActivity('ishwar',this.projectData)
+    this.firestoreService.updateActivity('ishwar',{pro:this.allUserData})
     switch(color){
       case 'dt':
         this.fillDark()
       break;
       case 'mb':
-          document.body.style.background='#181818'
+        d.style.background='#474747'
       break;
       case 'b':
-          document.body.style.background='#000000'
+          d.style.background='#000000'
       break;
       case 'pt':
           this.fillPink()
       break;
       case 'light':
-          document.body.style.background='rgba(170, 170, 170, 0.18)'
+          d.style.background='rgba(170, 170, 170, 0.18)'
         break;
       case 'img':
-          document.body.style.backgroundRepeat="repeat"
-          document.body.style.backgroundImage="url('assets/dashboard_background.jpg')"
+          d.style.backgroundRepeat="repeat"
+          d.style.backgroundImage="url('assets/dashboard_background.jpg')"
       break;
       default:
          
-          document.body.style.background='#181818'
+          d.style.background='#181818'
           break;
     }
 
